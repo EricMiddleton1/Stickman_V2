@@ -78,7 +78,7 @@ void PinMuxConfig(void)
     // Set unused pins to PIN_MODE_0 with the exception of JTAG pins 16,17,19,20
     //
     MAP_PinModeSet(PIN_03, PIN_MODE_0);
-    MAP_PinModeSet(PIN_06, PIN_MODE_0);
+    MAP_PinModeSet(PIN_21, PIN_MODE_0);
     MAP_PinModeSet(PIN_45, PIN_MODE_0);
     MAP_PinModeSet(PIN_50, PIN_MODE_0);
     MAP_PinModeSet(PIN_52, PIN_MODE_0);
@@ -158,16 +158,16 @@ void PinMuxConfig(void)
     MAP_GPIODirModeSet(GPIOA3_BASE, 0x10, GPIO_DIR_MODE_OUT);
 
     //
+    // Configure PIN_06 for GPIO Output
+    //
+    MAP_PinTypeGPIO(PIN_06, PIN_MODE_0, false);
+    MAP_GPIODirModeSet(GPIOA1_BASE, 0x80, GPIO_DIR_MODE_OUT);
+
+    //
     // Configure PIN_08 for GPIO Output
     //
     MAP_PinTypeGPIO(PIN_08, PIN_MODE_0, false);
     MAP_GPIODirModeSet(GPIOA2_BASE, 0x2, GPIO_DIR_MODE_OUT);
-
-    //
-    // Configure PIN_21 for GPIO Output
-    //
-    MAP_PinTypeGPIO(PIN_21, PIN_MODE_0, false);
-    MAP_GPIODirModeSet(GPIOA3_BASE, 0x2, GPIO_DIR_MODE_OUT);
 
     //
     // Configure PIN_05 for SPI0 GSPI_CLK

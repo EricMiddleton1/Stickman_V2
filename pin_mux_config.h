@@ -76,14 +76,14 @@
 #define CS_ARM_L_PORT	GPIOA2_BASE
 #define CS_ARM_L_PIN	0x02
 
-#define CS_ARM_R_PORT	GPIOA2_BASE
-#define CS_ARM_R_PIN	0x40
+#define CS_ARM_R_PORT	GPIOA1_BASE
+#define CS_ARM_R_PIN	0x80
 
 #define CS_LEG_L_PORT	GPIOA0_BASE
 #define CS_LEG_L_PIN	0x02
 
-#define CS_LEG_R_PORT	GPIOA3_BASE
-#define CS_LEG_R_PIN	0x02
+#define CS_LEG_R_PORT	GPIOA2_BASE//GPIOA3_BASE
+#define CS_LEG_R_PIN	0x40//0x02
 
 typedef enum {
 	CS_CHEST = 0,

@@ -178,6 +178,8 @@ int main(void)
     	}
 
     	APA102_setAll(&armLeft, reds[color], greens[color], blues[color]);
+    	uint8_t c = (color+1) % 6;
+    	APA102_setAll(&armRight, reds[c], greens[c], blues[c]);
 
     	Matrix_update(&matrix);
     	APA102_updateStrip(&armLeft);
