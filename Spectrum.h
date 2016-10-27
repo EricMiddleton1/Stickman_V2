@@ -9,15 +9,15 @@
 #define SPECTRUM_H_
 
 #define MAX_VALUE		4096
-#define NOISE_FLOOR		-15
+#define NOISE_FLOOR		-5
 
-#define MAX_DB			22.f
+#define MAX_DB			(7.f - NOISE_FLOOR)
 
 #define ACTIVATE_RATE	0.6f
 #define FADE_RATE		0.02f
 
-#define HF_FACTOR		1.8f //Factor to correct for HF roll-off
-#define LF_FACTOR		0.8f
+#define HF_FACTOR		1.f //Factor to correct for HF roll-off
+#define LF_FACTOR		1.f
 
 #include <stdint.h>
 

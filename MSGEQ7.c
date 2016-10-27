@@ -19,7 +19,7 @@
 #define ADC_CHANNEL		ADC_CH_1
 
 #define MAX_VALUE		4096
-#define NOISE_FLOOR		-15
+#define NOISE_FLOOR		-5
 
 #define TIMER_PERIOD	79999	//Gives 100us period
 
