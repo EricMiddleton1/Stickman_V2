@@ -33,9 +33,14 @@ static volatile uint8_t _state;
 
 static uint32_t _levels[GEQ_CH_COUNT];
 
+//100us tick counter, for timekeeping
+uint32_t _tick;
+
 void MSGEQ7_init() {
 	_adcCount = 0;
 	_state = 0;
+
+	_tick = 0;
 
 	uint8_t i;
 	for(i = 0; i < GEQ_CH_COUNT; ++i) {
@@ -130,20 +135,13 @@ void adc_interruptHandler() {
 	}
 }
 
-/*
-0	0 1
-1	2 3
-2	4 5
-3	6 7
-4	8 9
-5	10 11
-6	12 13
-7	14	15
-*/
 
 void timer_handler() {
 	unsigned long intStatus = TimerIntStatus(TIMER_BASE, 0);
 	TimerIntClear(TIMER_BASE, intStatus);
+
+	//Increment tick counter
+	_tick++;
 
 	if(!(_state & 0x01)) {
 		//Even numbered state, need to set reset or strobe

@@ -11,14 +11,6 @@
 
 #include "MSGEQ7.h"
 
-#define MAX_VALUE		4096
-#define NOISE_FLOOR		-15
-
-#define MAX_DB			22.f
-
-#define ACTIVATE_RATE	0.5f
-#define FADE_RATE		0.1f
-
 static void __filter(float*, float);
 
 void Spectrum_init(float *spectrum) {
@@ -38,14 +30,18 @@ void Spectrum_fromMSGEQ7(float *spectrum, const uint32_t *geq) {
 	}
 
 	//Filter the new values into the existing spectrum
-	__filter(spectrum, db[0]/MAX_DB);
+	__filter(spectrum, db[0]/MAX_DB * LF_FACTOR);
 	__filter(spectrum+1, db[1]/MAX_DB);
 	__filter(spectrum+2, (db[2] + db[3])/(2.f*MAX_DB));
 	__filter(spectrum+3, db[4]/MAX_DB);
-	__filter(spectrum+4, (db[5] + db[6])/(2.f*MAX_DB));
+	__filter(spectrum+4, (db[5] + db[6])/(2.f*MAX_DB) * HF_FACTOR);
 }
 
 static void __filter(float *out, float in) {
+	//Limit value to 1.0
+	if(in > 1.f)
+		in = 1.f;
+
 	if(in >= *out)
 		*out = (*out) * (1.f - ACTIVATE_RATE) + in*ACTIVATE_RATE;
 	else {

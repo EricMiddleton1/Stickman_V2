@@ -37,10 +37,7 @@ main.obj: ../pin_mux_config.h
 main.obj: C:/ti/CC3200SDK_1.2.0/cc3200-sdk/inc/hw_memmap.h
 main.obj: C:/ti/CC3200SDK_1.2.0/cc3200-sdk/inc/hw_gpio.h
 main.obj: C:/ti/CC3200SDK_1.2.0/cc3200-sdk/driverlib/pin.h
-main.obj: ../APA102.h
-main.obj: ../Matrix.h
-main.obj: ../MSGEQ7.h
-main.obj: ../Spectrum.h
+main.obj: ../Effect.h
 main.obj: C:/ti/ccsv6/tools/compiler/ti-cgt-arm_5.2.5/include/math.h
 main.obj: C:/ti/ccsv6/tools/compiler/ti-cgt-arm_5.2.5/include/ymath.h
 main.obj: C:/ti/ccsv6/tools/compiler/ti-cgt-arm_5.2.5/include/yvals.h
@@ -85,10 +82,7 @@ C:/ti/CC3200SDK_1.2.0/cc3200-sdk/example/common/uart_if.h:
 C:/ti/CC3200SDK_1.2.0/cc3200-sdk/inc/hw_memmap.h: 
 C:/ti/CC3200SDK_1.2.0/cc3200-sdk/inc/hw_gpio.h: 
 C:/ti/CC3200SDK_1.2.0/cc3200-sdk/driverlib/pin.h: 
-../APA102.h: 
-../Matrix.h: 
-../MSGEQ7.h: 
-../Spectrum.h: 
+../Effect.h: 
 C:/ti/ccsv6/tools/compiler/ti-cgt-arm_5.2.5/include/math.h: 
 C:/ti/ccsv6/tools/compiler/ti-cgt-arm_5.2.5/include/ymath.h: 
 C:/ti/ccsv6/tools/compiler/ti-cgt-arm_5.2.5/include/yvals.h: 

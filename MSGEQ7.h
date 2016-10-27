@@ -12,6 +12,8 @@
 
 #define GEQ_CH_COUNT	7
 
+extern uint32_t _tick;
+
 void MSGEQ7_init();
 
 void MSGEQ7_get(uint32_t*);

@@ -12,7 +12,9 @@ GEN_CMDS__FLAG := -l"C:/ti/CC3200SDK_1.2.0/cc3200-sdk/ti_rtos/ti_rtos_config/ccs
 ORDERED_OBJS += \
 "./APA102.obj" \
 "./AudioInput.obj" \
+"./BeatDetect.obj" \
 "./Console.obj" \
+"./Effect.obj" \
 "./MSGEQ7.obj" \
 "./Matrix.obj" \
 "./Spectrum.obj" \
@@ -169,8 +171,8 @@ Stickman_V2.bin: $(EXE_OUTPUTS)
 # Other Targets
 clean:
 	-$(RM) $(EXE_OUTPUTS__QUOTED)$(BIN_OUTPUTS__QUOTED)
-	-$(RM) "APA102.d" "AudioInput.d" "Console.d" "MSGEQ7.d" "Matrix.d" "Spectrum.d" "main.d" "network_common.d" "rom_pin_mux_config.d" "uart_if.d" 
-	-$(RM) "APA102.obj" "AudioInput.obj" "Console.obj" "MSGEQ7.obj" "Matrix.obj" "Spectrum.obj" "main.obj" "network_common.obj" "rom_pin_mux_config.obj" "uart_if.obj" 
+	-$(RM) "APA102.d" "AudioInput.d" "BeatDetect.d" "Console.d" "Effect.d" "MSGEQ7.d" "Matrix.d" "Spectrum.d" "main.d" "network_common.d" "rom_pin_mux_config.d" "uart_if.d" 
+	-$(RM) "APA102.obj" "AudioInput.obj" "BeatDetect.obj" "Console.obj" "Effect.obj" "MSGEQ7.obj" "Matrix.obj" "Spectrum.obj" "main.obj" "network_common.obj" "rom_pin_mux_config.obj" "uart_if.obj" 
 	-@echo 'Finished clean'
 	-@echo ' '
 

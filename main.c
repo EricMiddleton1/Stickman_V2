@@ -38,19 +38,12 @@
 
 #define DEFAULT_BAUD			115200
 
-#define CHEST_WIDTH				5
-#define CHEST_HEIGHT			20
-
-#define ARM_LENGTH				27
-#define LEG_LENGTH				38
+#define MIN_BEAT				0.05
 
 #include "pin_mux_config.h"
 
 //Custom tasks
-#include "APA102.h"
-#include "Matrix.h"
-#include "MSGEQ7.h"
-#include "Spectrum.h"
+#include "Effect.h"
 
 #include <math.h>
 
@@ -121,89 +114,8 @@ int main(void)
     //Set the red LED
     GPIOPinWrite(LED_PORT, LED_RED, 0xFF);
 
-
-    //Initialize the APA102 driver
-    APA102_init();
-
-    //Initialize the MSGEQ7 driver
-    MSGEQ7_init();
-
-    //Initialize the chest matrix
-    Matrix matrix;
-    Matrix_init(&matrix, CS_CHEST, CHEST_WIDTH, CHEST_HEIGHT);
-
-    //Initialize the appendage strips
-    APA102_Strip armLeft, armRight, legLeft, legRight;
-    APA102_initStrip(&armLeft, CS_ARM_L, ARM_LENGTH);
-    APA102_initStrip(&armRight, CS_ARM_R, ARM_LENGTH);
-    APA102_initStrip(&legLeft, CS_LEG_L, LEG_LENGTH);
-    APA102_initStrip(&legRight, CS_LEG_R, LEG_LENGTH);
-
-    Matrix_update(&matrix);
-
-    //Set the orange LED
-    GPIOPinWrite(LED_PORT, LED_ORANGE, 0xFF);
-
-	uint32_t geq[GEQ_CH_COUNT];
-	float spectrum[5];
-
-	Spectrum_init(spectrum);
-
-    while(1) {
-    	static uint16_t i = 0;
-    	static uint8_t color = 0;
-    	static uint16_t brt = 192;
-    	static int8_t dir = 1;
-
-    	//Get the current spectrum
-    	MSGEQ7_get(geq);
-
-    	Spectrum_fromMSGEQ7(spectrum, geq);
-
-    	Matrix_clear(&matrix);
-
-    	uint8_t x;
-    	uint8_t reds[] = {brt, brt, 0, 0, 0, brt};
-    	uint8_t greens[] = {0, brt, brt, brt, 0, 0};
-    	uint8_t blues[] = {0, 0, 0, brt, brt, brt};
-
-    	for(x = 0; x < 5; ++x) {
-    		uint8_t level = CHEST_HEIGHT * spectrum[x], y;
-    		if(level < 1)
-    			level = 1;
-
-    		for(y = 0; y < level; ++y) {
-    			Matrix_setPixel(&matrix, x, y, reds[x], greens[x], blues[x]);
-    		}
-    	}
-
-    	APA102_setAll(&armLeft, reds[color], greens[color], blues[color]);
-    	uint8_t c = (color+1) % 6;
-    	APA102_setAll(&armRight, reds[c], greens[c], blues[c]);
-
-    	Matrix_update(&matrix);
-    	APA102_updateStrip(&armLeft);
-    	APA102_updateStrip(&armRight);
-    	APA102_updateStrip(&legLeft);
-    	APA102_updateStrip(&legRight);
-
-    	/*
-    	brt += dir;
-    	if(brt >= 256) {
-    		dir *= -1;
-    		brt += dir;
-
-    		if(brt == 0)
-    			color = (color + 2) % 6;
-    	}*/
-    	++i;
-    	if(i == 100) {
-    		i = 0;
-    		color = (color + 1) % 6;
-    	}
-
-    	UtilsDelay(80000/3); //Delay 1ms
-    }
+    //Initialize the effect system
+    Effect_start();
 
     int retval;
 

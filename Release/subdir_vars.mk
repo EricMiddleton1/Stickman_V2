@@ -9,7 +9,9 @@ CMD_SRCS += \
 C_SRCS += \
 ../APA102.c \
 ../AudioInput.c \
+../BeatDetect.c \
 ../Console.c \
+../Effect.c \
 ../MSGEQ7.c \
 ../Matrix.c \
 ../Spectrum.c \
@@ -21,7 +23,9 @@ C:/ti/CC3200SDK_1.2.0/cc3200-sdk/example/common/uart_if.c
 OBJS += \
 ./APA102.obj \
 ./AudioInput.obj \
+./BeatDetect.obj \
 ./Console.obj \
+./Effect.obj \
 ./MSGEQ7.obj \
 ./Matrix.obj \
 ./Spectrum.obj \
@@ -33,7 +37,9 @@ OBJS += \
 C_DEPS += \
 ./APA102.d \
 ./AudioInput.d \
+./BeatDetect.d \
 ./Console.d \
+./Effect.d \
 ./MSGEQ7.d \
 ./Matrix.d \
 ./Spectrum.d \
@@ -45,7 +51,9 @@ C_DEPS += \
 C_DEPS__QUOTED += \
 "APA102.d" \
 "AudioInput.d" \
+"BeatDetect.d" \
 "Console.d" \
+"Effect.d" \
 "MSGEQ7.d" \
 "Matrix.d" \
 "Spectrum.d" \
@@ -57,7 +65,9 @@ C_DEPS__QUOTED += \
 OBJS__QUOTED += \
 "APA102.obj" \
 "AudioInput.obj" \
+"BeatDetect.obj" \
 "Console.obj" \
+"Effect.obj" \
 "MSGEQ7.obj" \
 "Matrix.obj" \
 "Spectrum.obj" \
@@ -69,7 +79,9 @@ OBJS__QUOTED += \
 C_SRCS__QUOTED += \
 "../APA102.c" \
 "../AudioInput.c" \
+"../BeatDetect.c" \
 "../Console.c" \
+"../Effect.c" \
 "../MSGEQ7.c" \
 "../Matrix.c" \
 "../Spectrum.c" \

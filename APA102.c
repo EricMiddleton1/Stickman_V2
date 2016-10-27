@@ -73,7 +73,7 @@ void APA102_initStrip(APA102_Strip* strip, CS_e cs, uint32_t pixelCount) {
 void APA102_clearStrip(APA102_Strip *strip) {
 	uint16_t i;
 	for(i = 0; i < strip->pixelCount; ++i) {
-		strip->pixels[i] &= 0xFF000000;
+		strip->pixels[i+1] &= 0xFF000000;
 	}
 }
 
