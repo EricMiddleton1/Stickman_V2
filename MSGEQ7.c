@@ -50,7 +50,7 @@ void MSGEQ7_init() {
 	//Clear reset and strobe pins
 	GPIOPinWrite(GEQ_PORT, GEQ_RESET_PIN | GEQ_STROBE_PIN, 0x00);
 
-	//Enable the GPT timer
+	//Enable the GPT clock
     MAP_PRCMPeripheralClkEnable(PRCM_TIMERA0, PRCM_RUN_MODE_CLK);
     MAP_PRCMPeripheralReset(PRCM_TIMERA0);
 

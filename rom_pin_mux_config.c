@@ -83,7 +83,6 @@ void PinMuxConfig(void)
     MAP_PinModeSet(PIN_50, PIN_MODE_0);
     MAP_PinModeSet(PIN_52, PIN_MODE_0);
     MAP_PinModeSet(PIN_53, PIN_MODE_0);
-    MAP_PinModeSet(PIN_57, PIN_MODE_0);
     MAP_PinModeSet(PIN_60, PIN_MODE_0);
     MAP_PinModeSet(PIN_62, PIN_MODE_0);
     MAP_PinModeSet(PIN_63, PIN_MODE_0);
@@ -97,6 +96,11 @@ void PinMuxConfig(void)
     MAP_PRCMPeripheralClkEnable(PRCM_GPIOA2, PRCM_RUN_MODE_CLK);
     MAP_PRCMPeripheralClkEnable(PRCM_GPIOA3, PRCM_RUN_MODE_CLK);
     MAP_PRCMPeripheralClkEnable(PRCM_GSPI, PRCM_RUN_MODE_CLK);
+
+    //
+    // Configure PIN_57 for ADC0 ADC_CH0
+    //
+    MAP_PinTypeADC(PIN_57, PIN_MODE_255);
 
     //
     // Configure PIN_58 for ADC0 ADC_CH1

@@ -43,6 +43,9 @@
 #include "pin_mux_config.h"
 
 //Custom tasks
+#include "BatteryMonitor.h"
+#include "task_wifi.h"
+#include "Communicator.h"
 #include "Effect.h"
 
 #include <math.h>
@@ -114,17 +117,22 @@ int main(void)
     //Set the red LED
     GPIOPinWrite(LED_PORT, LED_RED, 0xFF);
 
+    //Initialize the battery monitoring system
+    BatteryMonitor_init();
+
+    //Initialize the communication system
+    Communicator_init();
+
     //Initialize the effect system
     Effect_start();
+
+    //Initialize the wifi system
+    wifi_init();
 
     int retval;
 
     //Start simplelink host
     retval = VStartSimpleLinkSpawnTask(SPAWN_TASK_PRIORITY);
-    if(retval < 0) {
-    	for(;;);
-    }
-
     if(retval < 0) {
     	for(;;);
     }

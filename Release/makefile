@@ -12,7 +12,10 @@ GEN_CMDS__FLAG := -l"C:/ti/CC3200SDK_1.2.0/cc3200-sdk/ti_rtos/ti_rtos_config/ccs
 ORDERED_OBJS += \
 "./APA102.obj" \
 "./AudioInput.obj" \
+"./BatteryMonitor.obj" \
 "./BeatDetect.obj" \
+"./Color.obj" \
+"./Communicator.obj" \
 "./Console.obj" \
 "./Effect.obj" \
 "./MSGEQ7.obj" \
@@ -21,6 +24,7 @@ ORDERED_OBJS += \
 "./main.obj" \
 "./network_common.obj" \
 "./rom_pin_mux_config.obj" \
+"./task_wifi.obj" \
 "./uart_if.obj" \
 "../cc3200v1p32.cmd" \
 $(GEN_CMDS__FLAG) \
@@ -150,13 +154,13 @@ BIN_OUTPUTS__QUOTED += \
 all: Stickman_V2.out
 
 dependents:
-	-cd C:/ti/CC3200SDK_1.2.0/cc3200-sdk/ti_rtos/ti_rtos_config/ccs/Default && $(MAKE) clean all
+	-cd C:/ti/CC3200SDK_1.2.0/cc3200-sdk/ti_rtos/ti_rtos_config/ccs/Default && $(MAKE) all
 
 # Tool invocations
 Stickman_V2.out: $(OBJS) $(CMD_SRCS) $(GEN_CMDS) C:/ti/CC3200SDK_1.2.0/cc3200-sdk/ti_rtos/ti_rtos_config/ccs/Default/configPkg/linker.cmd
 	@echo 'Building target: $@'
 	@echo 'Invoking: ARM Linker'
-	"C:/ti/ccsv6/tools/compiler/ti-cgt-arm_5.2.5/bin/armcl" -mv7M4 --code_state=16 --float_support=vfplib --abi=eabi -me -g --define=ccs --define=USE_TIRTOS --define=SL_PLATFORM_MULTI_THREADED --define=cc3200 --diag_wrap=off --diag_warning=225 --display_error_number -z -m"Stickman_V2.map" --heap_size=16384 --stack_size=16384 -i"C:/ti/ccsv6/tools/compiler/ti-cgt-arm_5.2.5/lib" -i"C:/ti/ccsv6/tools/compiler/ti-cgt-arm_5.2.5/include" --reread_libs --display_error_number --diag_wrap=off --warn_sections --xml_link_info="Stickman_V2_linkInfo.xml" --rom_model -o "Stickman_V2.out" $(ORDERED_OBJS)
+	"C:/ti/ccsv6/tools/compiler/ti-cgt-arm_5.2.5/bin/armcl" -mv7M4 --code_state=16 --float_support=vfplib --abi=eabi -me -g --define=ccs --define=USE_TIRTOS --define=SL_PLATFORM_MULTI_THREADED --define=cc3200 --diag_wrap=off --diag_warning=225 --display_error_number -z -m"Stickman_V2.map" --heap_size=32768 --stack_size=32768 -i"C:/ti/ccsv6/tools/compiler/ti-cgt-arm_5.2.5/lib" -i"C:/ti/ccsv6/tools/compiler/ti-cgt-arm_5.2.5/include" --reread_libs --display_error_number --diag_wrap=off --warn_sections --xml_link_info="Stickman_V2_linkInfo.xml" --rom_model -o "Stickman_V2.out" $(ORDERED_OBJS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 	@$(MAKE) --no-print-directory post-build
@@ -171,8 +175,8 @@ Stickman_V2.bin: $(EXE_OUTPUTS)
 # Other Targets
 clean:
 	-$(RM) $(EXE_OUTPUTS__QUOTED)$(BIN_OUTPUTS__QUOTED)
-	-$(RM) "APA102.d" "AudioInput.d" "BeatDetect.d" "Console.d" "Effect.d" "MSGEQ7.d" "Matrix.d" "Spectrum.d" "main.d" "network_common.d" "rom_pin_mux_config.d" "uart_if.d" 
-	-$(RM) "APA102.obj" "AudioInput.obj" "BeatDetect.obj" "Console.obj" "Effect.obj" "MSGEQ7.obj" "Matrix.obj" "Spectrum.obj" "main.obj" "network_common.obj" "rom_pin_mux_config.obj" "uart_if.obj" 
+	-$(RM) "APA102.d" "AudioInput.d" "BatteryMonitor.d" "BeatDetect.d" "Color.d" "Communicator.d" "Console.d" "Effect.d" "MSGEQ7.d" "Matrix.d" "Spectrum.d" "main.d" "network_common.d" "rom_pin_mux_config.d" "task_wifi.d" "uart_if.d" 
+	-$(RM) "APA102.obj" "AudioInput.obj" "BatteryMonitor.obj" "BeatDetect.obj" "Color.obj" "Communicator.obj" "Console.obj" "Effect.obj" "MSGEQ7.obj" "Matrix.obj" "Spectrum.obj" "main.obj" "network_common.obj" "rom_pin_mux_config.obj" "task_wifi.obj" "uart_if.obj" 
 	-@echo 'Finished clean'
 	-@echo ' '
 

@@ -37,6 +37,10 @@ main.obj: ../pin_mux_config.h
 main.obj: C:/ti/CC3200SDK_1.2.0/cc3200-sdk/inc/hw_memmap.h
 main.obj: C:/ti/CC3200SDK_1.2.0/cc3200-sdk/inc/hw_gpio.h
 main.obj: C:/ti/CC3200SDK_1.2.0/cc3200-sdk/driverlib/pin.h
+main.obj: ../BatteryMonitor.h
+main.obj: ../task_wifi.h
+main.obj: C:/ti/ccsv6/tools/compiler/ti-cgt-arm_5.2.5/include/stdlib.h
+main.obj: ../Communicator.h
 main.obj: ../Effect.h
 main.obj: C:/ti/ccsv6/tools/compiler/ti-cgt-arm_5.2.5/include/math.h
 main.obj: C:/ti/ccsv6/tools/compiler/ti-cgt-arm_5.2.5/include/ymath.h
@@ -82,6 +86,10 @@ C:/ti/CC3200SDK_1.2.0/cc3200-sdk/example/common/uart_if.h:
 C:/ti/CC3200SDK_1.2.0/cc3200-sdk/inc/hw_memmap.h: 
 C:/ti/CC3200SDK_1.2.0/cc3200-sdk/inc/hw_gpio.h: 
 C:/ti/CC3200SDK_1.2.0/cc3200-sdk/driverlib/pin.h: 
+../BatteryMonitor.h: 
+../task_wifi.h: 
+C:/ti/ccsv6/tools/compiler/ti-cgt-arm_5.2.5/include/stdlib.h: 
+../Communicator.h: 
 ../Effect.h: 
 C:/ti/ccsv6/tools/compiler/ti-cgt-arm_5.2.5/include/math.h: 
 C:/ti/ccsv6/tools/compiler/ti-cgt-arm_5.2.5/include/ymath.h: 

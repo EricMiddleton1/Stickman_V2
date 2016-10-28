@@ -9,6 +9,7 @@
 
 #include <stdbool.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "osi.h"
 
@@ -17,6 +18,8 @@
 #include "MSGEQ7.h"
 #include "Spectrum.h"
 #include "BeatDetect.h"
+#include "Communicator.h"
+#include "Color.h"
 
 #define STACK_SIZE		4096
 
@@ -67,11 +70,23 @@ static const struct Effect _effects[] = {
 		{&soundStart, &soundUpdate, &soundEnd, &soundData, &_effectData[3]}
 };
 
+static const char* _effectNames[] = {
+		"Solid Stickman",
+		"Pulsing Stickman",
+		"Chest Message",
+		"Sound Reactive"
+};
+
 //LED strips
 static Matrix matrix;
 static APA102_Strip armLeft, armRight, legLeft, legRight;
 
+static Effect_e _globalEffect;
+
 static void __effectTask(void);
+
+static void cbPacketListModeQuery(const Packet*);
+static void cbPacketModeSet(const Packet*);
 
 void Effect_start() {
     //Initialize the APA102 driver
@@ -86,6 +101,12 @@ void Effect_start() {
     APA102_initStrip(&legLeft, CS_LEG_L, LEG_LENGTH);
     APA102_initStrip(&legRight, CS_LEG_R, LEG_LENGTH);
 
+    //Register handlers for packets
+    Communicator_registerHandler(LIST_MODE_QUERY, &cbPacketListModeQuery);
+    Communicator_registerHandler(MODE_SET, &cbPacketModeSet);
+
+    _globalEffect = DEFAULT_EFFECT;
+
     //Launch Effect update task
     osi_TaskCreate(__effectTask,
     		(const signed char*)"Effect Task",
@@ -96,38 +117,114 @@ void Effect_start() {
 }
 
 void __effectTask(void) {
-	Effect_e currentEffect = DEFAULT_EFFECT;
-
-	bool newEffect = true;
+	Effect_e currentEffect = MAX_EFFECT;
 
 	while(1) {
-		const struct Effect *ePtr = &_effects[(uint8_t)currentEffect];
+		if(currentEffect != _globalEffect) {
+			if(currentEffect != MAX_EFFECT) {
+				//Call end routine
+				_effects[(uint8_t)currentEffect].end(_effects[(uint8_t)currentEffect].effectData);
+			}
 
-		if(newEffect) {
-			//Call the effect's start routine
-			if(ePtr->start != NULL)
-				ePtr->start(ePtr->effectData);
+			//Select new effect
+			currentEffect = _globalEffect;
 
-			newEffect = false;
+			//Call new effect start routine
+			_effects[(uint8_t)currentEffect].start(_effects[(uint8_t)currentEffect].effectData);
 		}
+
+		const struct Effect *ePtr = &_effects[(uint8_t)currentEffect];
 
 		//Update the effect
 		ePtr->update(ePtr->effectData, _tick);
-
-		//TODO: Check for messages from WiFi system
 
 		//TODO: make this delay take processing time into account
 		osi_Sleep(10);
 	}
 }
 
+void cbPacketListModeQuery(const Packet* _in) {
+	uint16_t length = 0;
+	uint8_t buffer[128];
+
+	uint8_t i;
+	for(i = 0; i < MAX_EFFECT; ++i) {
+		length += 1 + strlen(_effectNames[i]);
+	}
+
+	Packet p;
+
+	p.type = (uint8_t)LIST_MODE_RESPONSE;
+	p.payloadSize = length + 1;
+
+	//p.payload = (uint8_t*)malloc(length + 1);
+	p.payload = buffer;
+
+	p.payload[0] = MAX_EFFECT;
+
+	for(i = 0; i < MAX_EFFECT; ++i) {
+		static uint16_t index = 1;
+
+		uint8_t cpySize = strlen(_effectNames[i]) + 1;
+		strcpy(p.payload + index, _effectNames[i]);
+		//memcpy(p.payload + index, _effectNames[i], cpySize);
+
+		index += cpySize;
+	}
+
+	//Send packet
+	Communicator_sendPacket(&p);
+}
+void cbPacketModeSet(const Packet* _in) {
+	if(_in->payloadSize != 1) {
+		//Error
+		return;
+	}
+
+	if(_in->payload[0] < MAX_EFFECT) {
+		//Set new effect
+		_globalEffect = _in->payload[0];
+	}
+}
+
+
+typedef struct SolidSettings {
+	Color colors[3];
+	uint8_t brightness;
+} SolidSettings;
 
 static void solidStickStart(void** settings) {
+	static SolidSettings solidSettings = {
+			{ {1.f, 1.f, 0.f}, {1.f, 1.f, 0.f}, {1.f, 0.f, 0.f} },
+			192
+	};
 
+	*settings = &solidSettings;
 }
 
 static void solidStickUpdate(void** settings, uint32_t time) {
+	SolidSettings *solidSettings = *settings;
+	uint8_t brt = solidSettings->brightness;
 
+
+	Matrix_clear(&matrix);
+
+	uint8_t r = brt * (solidSettings->colors[0].r), g = brt * (solidSettings->colors[0].g), b = brt * (solidSettings->colors[0].b);
+	uint8_t y;
+	for(y = 0; y < matrix.height; ++y) {
+		Matrix_setPixel(&matrix, 2, y, r, g, b);
+	}
+
+	APA102_setAll(&armLeft, brt * (solidSettings->colors[1].r), brt * (solidSettings->colors[1].g), brt * (solidSettings->colors[1].b));
+	APA102_setAll(&armRight, brt * (solidSettings->colors[1].r), brt * (solidSettings->colors[1].g), brt * (solidSettings->colors[1].b));
+	APA102_setAll(&legLeft, brt * (solidSettings->colors[2].r), brt * (solidSettings->colors[2].g), brt * (solidSettings->colors[2].b));
+	APA102_setAll(&legRight, brt * (solidSettings->colors[2].r), brt * (solidSettings->colors[2].g), brt * (solidSettings->colors[2].b));
+
+	Matrix_update(&matrix);
+	APA102_updateStrip(&armLeft);
+	APA102_updateStrip(&armRight);
+	APA102_updateStrip(&legLeft);
+	APA102_updateStrip(&legRight);
 }
 
 static void solidStickEnd(void** settings) {
@@ -242,11 +339,14 @@ static void soundUpdate(void** settings, uint32_t time) {
 	}
 
 	//Update appendages with 'hits'
-	APA102_setAll(&armLeft, 0, 0, trebHit);
-	//APA102_setAll(&armLeft, bassHit, 0, 0);
-	APA102_setAll(&armRight, 0, 0, trebHit);
-	APA102_setAll(&legLeft, bassHit, 0, 0);
-	APA102_setAll(&legRight, bassHit, 0, 0);
+	//APA102_setAll(&armLeft, 0, 0, trebHit);
+	//APA102_setAll(&armRight, 0, 0, trebHit);
+	//APA102_setAll(&legLeft, bassHit, 0, 0);
+	//APA102_setAll(&legRight, bassHit, 0, 0);
+	APA102_setAll(&armLeft, 255, 255, 0);
+	APA102_setAll(&armRight, 255, 255, 0);
+	APA102_setAll(&legLeft, 255, 0, 0);
+	APA102_setAll(&legRight, 255, 0, 0);
 
 	//Flush updates to strips
 	Matrix_update(&matrix);
