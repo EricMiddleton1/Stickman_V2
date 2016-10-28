@@ -29,7 +29,7 @@
 #define ARM_LENGTH				27
 #define LEG_LENGTH				38
 
-#define DEFAULT_EFFECT	SOUND_REACTIVE
+#define DEFAULT_EFFECT	SOLID_STICKMAN
 
 struct Effect {
 	void (*start)(void**);
@@ -87,6 +87,7 @@ static void __effectTask(void);
 
 static void cbPacketListModeQuery(const Packet*);
 static void cbPacketModeSet(const Packet*);
+static void cbPacketListParams(const Packet*);
 
 void Effect_start() {
     //Initialize the APA102 driver
@@ -186,7 +187,6 @@ void cbPacketModeSet(const Packet* _in) {
 		_globalEffect = _in->payload[0];
 	}
 }
-
 
 typedef struct SolidSettings {
 	Color colors[3];
