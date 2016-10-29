@@ -88,7 +88,7 @@ void task_battery(void) {
 				.payload = payload,
 				.payloadSize = 2
 		};
-		//Communicator_sendPacket(&p);
+		Communicator_sendPacket(&p);
 
 		//Wait before checking again
 		osi_Sleep(1000);

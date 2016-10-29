@@ -88,6 +88,9 @@ static void __effectTask(void);
 static void cbPacketListModeQuery(const Packet*);
 static void cbPacketModeSet(const Packet*);
 static void cbPacketListParams(const Packet*);
+static void cbPacketSetParam(const Packet*);
+
+uint8_t brightness;
 
 void Effect_start() {
     //Initialize the APA102 driver
@@ -105,6 +108,9 @@ void Effect_start() {
     //Register handlers for packets
     Communicator_registerHandler(LIST_MODE_QUERY, &cbPacketListModeQuery);
     Communicator_registerHandler(MODE_SET, &cbPacketModeSet);
+    Communicator_registerHandler(MODE_PARAM_SET, &cbPacketSetParam);
+
+    brightness = 128;
 
     _globalEffect = DEFAULT_EFFECT;
 
@@ -188,6 +194,12 @@ void cbPacketModeSet(const Packet* _in) {
 	}
 }
 
+void cbPacketSetParam(const Packet* _in) {
+	if(_in->payloadSize == 2 && _in->payload[0] == 0) {
+		brightness = _in->payload[1];
+	}
+}
+
 typedef struct SolidSettings {
 	Color colors[3];
 	uint8_t brightness;
@@ -204,7 +216,7 @@ static void solidStickStart(void** settings) {
 
 static void solidStickUpdate(void** settings, uint32_t time) {
 	SolidSettings *solidSettings = *settings;
-	uint8_t brt = solidSettings->brightness;
+	uint8_t brt = brightness;//solidSettings->brightness;
 
 
 	Matrix_clear(&matrix);
@@ -306,7 +318,7 @@ static void soundUpdate(void** settings, uint32_t time) {
 	uint32_t geq[GEQ_CH_COUNT];
 
 	//Grab current brightness
-	uint8_t brightness = ((SoundSettings*)*settings)->brightness;
+	//uint8_t brightness = ((SoundSettings*)*settings)->brightness;
 
 	//Get the current spectrum
 	MSGEQ7_get(geq);
@@ -343,10 +355,10 @@ static void soundUpdate(void** settings, uint32_t time) {
 	//APA102_setAll(&armRight, 0, 0, trebHit);
 	//APA102_setAll(&legLeft, bassHit, 0, 0);
 	//APA102_setAll(&legRight, bassHit, 0, 0);
-	APA102_setAll(&armLeft, 255, 255, 0);
-	APA102_setAll(&armRight, 255, 255, 0);
-	APA102_setAll(&legLeft, 255, 0, 0);
-	APA102_setAll(&legRight, 255, 0, 0);
+	APA102_setAll(&armLeft, brightness, brightness, 0);
+	APA102_setAll(&armRight, brightness, brightness, 0);
+	APA102_setAll(&legLeft, brightness, 0, 0);
+	APA102_setAll(&legRight, brightness, 0, 0);
 
 	//Flush updates to strips
 	Matrix_update(&matrix);
